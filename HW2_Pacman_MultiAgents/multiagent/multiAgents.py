@@ -103,9 +103,7 @@ class ReflexAgent(Agent):
             score = score - 30
             
         #weight of capsules
-#         capsules = currentGameState.getCapsules()
-#         if newPos in capsules:
-#             score += 2000
+
         return score
         #return successorGameState.getScore() #default scoure
         #please change the return score as the score you want
