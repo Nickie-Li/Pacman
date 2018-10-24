@@ -76,37 +76,40 @@ class ReflexAgent(Agent):
         "*** YOUR CODE HERE ***"
         if currentGameState.isWin():
             return successorGameState.getScore()
-        score = successorGameState.getScore()
+        score = 0
         #weight of getting food
-        score += currentGameState.hasFood(newPos[0], newPos[1])
-        flist = list(newFood)
-        
-        flag = 10000 #a flag to find the closest food
-        for food in flist:
-            fooddist = manhattanDistance(food, newPos)
-            if fooddist < flag:
-                flag = fooddist
-        score = score + (10 - flag)
-        if currentGameState.getNumFood() < successorGameState.getNumFood():
-            score = score + 1000
+        flist = newFood.asList()
+        if currentGameState.getNumFood() > len(flist):
+            score = 0
+        else:
+            flag = 10000 #a flag to find the closest food
+            for food in flist:
+                fooddist = manhattanDistance(food, newPos)
+                if fooddist < flag:
+                    flag = fooddist
+            score = flag
+
             
         #weight of gost distance
         curGhostPos = currentGameState.getGhostState(1).getPosition()
         newGhostPos = successorGameState.getGhostState(1).getPosition()
-        if newPos == curGhostPos or newPos == newGhostPos:
-            score = score - 1000000
-        else:
-            score = score - 2 * manhattanDistance(curGhostPos, newPos)
-        
-        #weight of stop
-        if action == Directions.STOP:
-            score = score - 30
+        for ghost in newGhostStates:
+            score = score + 4 ** (2 - manhattanDistance(newGhostPos, newPos))
             
-        #weight of capsules
-#         capsules = currentGameState.getCapsules()
-#         if newPos in capsules:
-#             score += 2000
-        return score
+        if action == Directions.STOP:
+            score = score + 3
+            
+        capsules = successorGameState.getCapsules()
+        clist = capsules
+        if len(currentGameState.getCapsules()) == len(clist):
+            flag = 10000 #a flag to find the closest food
+            for food in clist:
+                fooddist = manhattanDistance(food, newPos)
+                if fooddist < flag:
+                    flag = fooddist
+            score = score + flag
+
+        return -score
         #return successorGameState.getScore() #default scoure
         #please change the return score as the score you want
 
