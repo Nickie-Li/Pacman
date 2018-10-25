@@ -214,6 +214,53 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        def minmax(state, depth, agentcode, alpha, beta):
+            if state.isWin() or state.isLose():
+                return state.getScore()
+            action = state.getLegalActions(agentcode)
+            agentnum = state.getNumAgents()
+            step = Directions.STOP
+            
+            if agentcode == 0:
+                maxima = -float('inf')
+                for act in action:
+                    evaluation = minmax(state.generateSuccessor(agentcode, act), depth, 1, alpha, beta)
+                    maxima = max(maxima, evaluation)
+                    if maxima == evaluation:
+                        step = act
+                    
+                    alpha = max(alpha, maxima)
+                    if alpha > beta:
+                        break
+                if depth == self.depth -1:
+                    return step
+                return maxima
+            
+            elif agentcode > 0 and agentcode < agentnum - 1:
+                minima = float('inf')
+                for act in action:
+                    evaluation = minmax(state.generateSuccessor(agentcode, act), depth, agentcode + 1, alpha, beta)
+                    minima = min(minima, evaluation)
+                    beta = min(beta, minima)
+                    if beta < alpha:
+                        break
+                return minima
+            
+            elif agentcode > 0 and agentcode == agentnum - 1:
+                minima = float('inf')
+                for act in action:
+                    if depth == 0:
+                        evaluation =  self.evaluationFunction(state.generateSuccessor(agentcode, act))
+                    else:
+                        evaluation = minmax(state.generateSuccessor(agentcode, act), depth - 1, 0, alpha, beta)
+                        
+                    minima = min(minima, evaluation)
+                    beta = min(beta, minima)
+                    if beta < alpha:
+                        break
+                return minima
+                    
+        return minmax(gameState, self.depth-1, 0, -float('inf'), float('inf'))
         util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
