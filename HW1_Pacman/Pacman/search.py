@@ -88,11 +88,7 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
     from game import Directions
-#     s = Directions.SOUTH
-#     w = Directions.WEST
-#     e = Directions.EAST
-#     n = Directions.NORTH
-#     print([n, w, s, e])
+
     start = problem.getStartState()
     
     from util import Stack
@@ -117,21 +113,6 @@ def depthFirstSearch(problem):
             stat = suc[0]
             move = suc[1]
             path = list(movement)
-#             if move == 'North':
-#                 path = path + [n]
-# #                 path.append(n)
-#                 state_Stack.push((stat, path)) 
-#             elif move == 'East':
-#                 path = path + [e]
-# #                 path.append(e)
-#                 state_Stack.push((stat, path)) 
-#             elif move == 'South':
-#                 path = path + [s]
-# #                 path.append(s)
-#                 state_Stack.push((stat, path)) 
-#             elif move == 'West':
-#                 path = path + [w]
-# #                 path.append(w)
             state_Stack.push((stat, path + [move]))       
     return []
     util.raiseNotDefined()
